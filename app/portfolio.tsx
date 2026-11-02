@@ -1,10 +1,55 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  siCss,
+  siExpress,
+  siFigma,
+  siFirebase,
+  siGit,
+  siGithub,
+  siHtml5,
+  siHuggingface,
+  siJavascript,
+  siMongodb,
+  siMysql,
+  siNodedotjs,
+  siPostgresql,
+  siPostman,
+  siPython,
+  siPytorch,
+  siReact,
+  siRetool,
+  siTailwindcss,
+} from "simple-icons";
+
+const technologies = [
+  [siPython, "Python"],
+  [siJavascript, "JavaScript"],
+  [siHtml5, "HTML5"],
+  [siCss, "CSS"],
+  [siReact, "React"],
+  [siTailwindcss, "Tailwind CSS"],
+  [siNodedotjs, "Node.js"],
+  [siExpress, "Express"],
+  [siMongodb, "MongoDB"],
+  [siMysql, "MySQL"],
+  [siPostgresql, "PostgreSQL"],
+  [siFirebase, "Firebase"],
+  [siPytorch, "PyTorch"],
+  [siHuggingface, "Hugging Face"],
+  [siGit, "Git"],
+  [siGithub, "GitHub"],
+  [siPostman, "Postman"],
+  [siFigma, "Figma"],
+  [siRetool, "Retool"],
+] as const;
+
+const heroPhrases = ["curiosity.", "clarity.", "real people."];
 
 const projects = [
   { number: "01", name: "Learnly", type: "Learning platform", description: "A welcoming space to discover, learn, and grow at your own pace.", image: "/images/learnly.png", github: "https://github.com/Akhlakur07/learnly", live: "https://learnly-auth.web.app/", tags: "React · Firebase · Education" },
@@ -26,6 +71,7 @@ function SmoothScroll() {
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
+    const aboutMedia = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
@@ -36,6 +82,22 @@ function SmoothScroll() {
       });
       gsap.utils.toArray<HTMLElement>(".hero-photo").forEach((element) => {
         gsap.to(element, { yPercent: 6, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.5 } });
+      });
+      aboutMedia.add("(min-width: 901px) and (prefers-reduced-motion: no-preference)", () => {
+        const chapters = document.querySelector<HTMLElement>(".about-chapters");
+        if (!chapters) return;
+        gsap.to(chapters, {
+          yPercent: -75,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".about-story",
+            start: "top top",
+            end: () => `+=${window.innerHeight * 3}`,
+            pin: true,
+            scrub: 0.7,
+            invalidateOnRefresh: true,
+          },
+        });
       });
       const track = document.querySelector<HTMLElement>(".project-track");
       if (track && window.matchMedia("(min-width: 900px)").matches) {
@@ -50,6 +112,7 @@ function SmoothScroll() {
     return () => {
       window.clearTimeout(refresh);
       ctx.revert();
+      aboutMedia.revert();
       gsap.ticker.remove(tick);
       lenis.destroy();
     };
@@ -89,8 +152,34 @@ function DhakaClock() {
   return <>{time} <span>BST</span></>;
 }
 
+function LogoMarquee() {
+  const logos = (duplicate = false) => (
+    <div className="tech-group" role={duplicate ? undefined : "list"} aria-hidden={duplicate || undefined}>
+      {technologies.map(([icon, name]) => (
+        <span className="tech-logo" role={duplicate ? undefined : "listitem"} key={`${duplicate ? "copy-" : ""}${name}`}>
+          <svg viewBox="0 0 24 24" role={duplicate ? undefined : "img"} aria-label={duplicate ? undefined : name} focusable="false">
+            <path d={icon.path} />
+          </svg>
+        </span>
+      ))}
+    </div>
+  );
+
+  return <div className="tech-marquee" aria-label="Technologies I use">
+    <div className="tech-track">{logos()}{logos(true)}</div>
+  </div>;
+}
+
 export default function Portfolio() {
   const [copied, setCopied] = useState(false);
+  const [activePhrase, setActivePhrase] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const interval = window.setInterval(() => {
+      setActivePhrase((current) => (current + 1) % heroPhrases.length);
+    }, 2600);
+    return () => window.clearInterval(interval);
+  }, []);
   const copyEmail = async () => {
     try { await navigator.clipboard.writeText("akhlak.ur433@gmail.com"); setCopied(true); window.setTimeout(() => setCopied(false), 1800); }
     catch { window.location.href = "mailto:akhlak.ur433@gmail.com"; }
@@ -104,15 +193,20 @@ export default function Portfolio() {
     <main id="top">
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-meta"><span>INDEPENDENT DEVELOPER</span><span>DHAKA, BANGLADESH <b>↘</b></span></div>
-        <div className="hero-copy"><p className="eyebrow"><span className="accent-mark">✳</span> DIGITAL PRODUCTS, BUILT WITH INTENT</p><h1 id="hero-title">I TURN IDEAS<br />INTO USEFUL<br /><span>PRODUCTS.</span></h1><div className="hero-bottom"><p>Developer with a curious mind<br />and a practical point of view.</p><a className="scroll-cue" href="#about"><span className="scroll-ring">↓</span><span>SCROLL TO EXPLORE</span></a></div></div>
+        <div className="hero-copy"><p className="eyebrow"><span className="accent-mark">✳</span> DIGITAL PRODUCTS, BUILT WITH INTENT</p><h1 id="hero-title">I TURN IDEAS<br />INTO USEFUL<br /><span>PRODUCTS.</span></h1><p className="hero-statement"><span>DESIGNED FOR</span><strong key={activePhrase}>{heroPhrases[activePhrase]}</strong></p><div className="hero-bottom"><p>Developer with a curious mind<br />and a practical point of view.</p><a className="scroll-cue" href="#about"><span className="scroll-ring">↓</span><span>SCROLL TO EXPLORE</span></a></div></div>
         <div className="hero-image-wrap"><Image className="hero-photo" src="/images/profile.jpeg" alt="Portrait of Akhlakur Rahman" fill priority sizes="(max-width: 800px) 70vw, 39vw" /></div>
         <span className="hero-index">01 / 08</span>
+        <LogoMarquee />
       </section>
 
       <section id="about" className="about section-pad">
         <div className="section-kicker" data-reveal><span>01 — THE PERSON</span><span>CURIOUS BY DEFAULT</span></div>
-        <div className="about-grid"><h2 data-reveal>I’m Akhlakur Rahman<span className="accent-mark">.</span></h2><div className="about-copy" data-reveal><p>A Computer Science and Engineering graduate from <strong>BRAC University</strong>, Bangladesh. I turn questions, ideas, and complex problems into useful digital products.</p><p>I care about how things work, how they feel, and whether they make someone’s day a little easier.</p><a className="text-link" href="https://drive.google.com/file/d/1mOmCYzFVl2bktuETnp9VxfDnGEBP-GzV/view" target="_blank" rel="noreferrer">VIEW MY RESUME <span>↗</span></a></div></div>
-        <div className="about-facts" data-reveal><div><span>ROLE</span><b>Developer</b></div><div><span>BASE</span><b>Bangladesh</b></div><div><span>FOCUS</span><b>Useful web products</b></div><div><span>EDUCATION</span><b>CSE · BRAC University</b></div></div>
+        <div className="about-story"><div className="about-fixed"><h2>I’m Akhlakur Rahman<span className="accent-mark">.</span></h2><span className="about-fixed-note">CSE GRADUATE · BRAC UNIVERSITY</span></div><div className="about-chapter-window"><div className="about-chapters">
+          <article className="about-chapter"><span>01 / BACKGROUND</span><p>A Computer Science and Engineering graduate from <strong>BRAC University</strong>, Bangladesh.</p><small>Based in Bangladesh · Open to opportunities</small></article>
+          <article className="about-chapter"><span>02 / WHAT I DO</span><p>I turn questions, ideas, and complex problems into <strong>useful digital products.</strong></p><small>From a rough idea to something people can use.</small></article>
+          <article className="about-chapter"><span>03 / HOW I WORK</span><p>Understand the problem. Shape a clear solution. Build, test, and refine the details.</p><small>Curiosity first. Thoughtful execution throughout.</small></article>
+          <article className="about-chapter"><span>04 / OUTSIDE THE SCREEN</span><p>I’m interested in the systems behind products—from full stack architecture to data, machine learning, and computer graphics.</p><a className="text-link" href="https://drive.google.com/file/d/1mOmCYzFVl2bktuETnp9VxfDnGEBP-GzV/view" target="_blank" rel="noreferrer">VIEW MY RESUME <span>↗</span></a></article>
+        </div></div></div>
       </section>
 
       <section id="work" className="work">
