@@ -557,7 +557,7 @@ export default function Portfolio() {
               src="/images/profile.jpeg"
               alt="Portrait of Akhlakur Rahman"
               fill
-              priority
+              fetchPriority="high"
               sizes="(max-width: 800px) 70vw, 39vw"
             />
             <svg

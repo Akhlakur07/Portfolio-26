@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Akhlakur Rahman — Developer",
+  title: "Akhlakur Rahman",
   description:
     "Akhlakur Rahman is a developer and BRAC University CSE graduate turning ideas and complex problems into useful digital products.",
 };
