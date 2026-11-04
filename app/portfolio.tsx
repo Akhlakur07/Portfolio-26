@@ -354,38 +354,133 @@ function SmoothScroll() {
 function Preloader() {
   const [visible, setVisible] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [ready, setReady] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+
   useEffect(() => {
+    if (!visible) return;
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = previousOverflow;
+    };
+  }, [visible]);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    let timerFinished = false;
+    let pageLoaded = document.readyState === "complete";
     const start = performance.now();
+    const duration = 1450;
     let frame = 0;
-    let done = false;
+
+    const finishIfReady = () => {
+      if (!timerFinished || !pageLoaded) return;
+      setProgress(100);
+      setReady(true);
+    };
+    const handlePageLoad = () => {
+      pageLoaded = true;
+      finishIfReady();
+    };
+
+    if (!pageLoaded) {
+      window.addEventListener("load", handlePageLoad, { once: true });
+    }
+
+    if (reduceMotion) {
+      timerFinished = true;
+      finishIfReady();
+      return () => window.removeEventListener("load", handlePageLoad);
+    }
+
     const animate = (now: number) => {
-      if (done) return;
-      const next = Math.min(100, Math.round(((now - start) / 1050) * 100));
+      const elapsed = now - start;
+      const next = Math.min(99, Math.floor((elapsed / duration) * 100));
       setProgress(next);
-      if (next < 100) frame = requestAnimationFrame(animate);
-      else window.setTimeout(() => setVisible(false), 180);
+      if (elapsed < duration) {
+        frame = requestAnimationFrame(animate);
+      } else {
+        timerFinished = true;
+        finishIfReady();
+      }
     };
     frame = requestAnimationFrame(animate);
-    const fallback = window.setTimeout(() => setVisible(false), 1800);
     return () => {
-      done = true;
       cancelAnimationFrame(frame);
-      clearTimeout(fallback);
+      window.removeEventListener("load", handlePageLoad);
     };
   }, []);
+
+  useEffect(() => {
+    if (!ready || isExiting) return;
+
+    const enterOnKey = (event: KeyboardEvent) => {
+      if (event.repeat || (event.key !== "Enter" && event.code !== "Space")) {
+        return;
+      }
+      event.preventDefault();
+      setIsExiting(true);
+    };
+
+    window.addEventListener("keydown", enterOnKey);
+    return () => window.removeEventListener("keydown", enterOnKey);
+  }, [ready, isExiting]);
+
+  useEffect(() => {
+    if (!isExiting) return;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const timeout = window.setTimeout(
+      () => setVisible(false),
+      reducedMotion ? 0 : 900,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [isExiting]);
+
   if (!visible) return null;
+
+  const beginEntering = () => {
+    if (ready && !isExiting) setIsExiting(true);
+  };
+
   return (
-    <div className="preloader" aria-label="Loading portfolio" role="status">
+    <div
+      className={`preloader${isExiting ? " is-exiting" : ""}`}
+      aria-label="Portfolio loading screen"
+      aria-busy={!ready}
+      onClick={beginEntering}
+    >
       <div className="preloader-top">
         <span>AKHLAKUR RAHMAN</span>
         <span>PORTFOLIO — 2026</span>
       </div>
-      <div className="preloader-bottom">
-        <span>DESIGNING WITH INTENT</span>
+
+      <div className="preloader-center">
         <span className="preloader-count">
           {String(progress).padStart(2, "0")}
           <sup>%</sup>
         </span>
+        {ready && (
+          <button
+            className="preloader-enter"
+            type="button"
+            onClick={beginEntering}
+          >
+            Click to Enter <span aria-hidden="true">↗</span>
+          </button>
+        )}
+      </div>
+
+      <div className="preloader-bottom">
+        <span className={`preloader-loading${ready ? " is-ready" : ""}`}>
+          {ready ? "SYSTEM READY" : "LOADING PORTFOLIO"}
+          {!ready && <i aria-hidden="true" />}
+        </span>
+        <span>{ready ? "PRESS ENTER" : `${String(progress).padStart(2, "0")}%`}</span>
       </div>
       <div className="preloader-line">
         <i style={{ transform: `scaleX(${progress / 100})` }} />
