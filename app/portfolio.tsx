@@ -321,19 +321,41 @@ function SmoothScroll() {
         },
       );
       const track = document.querySelector<HTMLElement>(".project-track");
-      if (track && window.matchMedia("(min-width: 900px)").matches) {
-        gsap.to(track, {
-          xPercent: -((projects.length - 1) * 100) / projects.length,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".work",
-            start: "top top",
-            end: () => `+=${window.innerHeight * (projects.length - 1)}`,
-            pin: true,
-            scrub: 0.65,
-            invalidateOnRefresh: true,
-          },
-        });
+      if (track) {
+        const createProjectScroll = (
+          trigger: string,
+          start: string,
+        ) => {
+          gsap.to(track, {
+            xPercent: -((projects.length - 1) * 100) / projects.length,
+            ease: "none",
+            scrollTrigger: {
+              trigger,
+              start,
+              end: () => `+=${window.innerHeight * (projects.length - 1)}`,
+              pin: ".work",
+              scrub: 0.65,
+              invalidateOnRefresh: true,
+            },
+          });
+        };
+
+        aboutMedia.add(
+          "(min-width: 901px) and (max-height: 650px)",
+          () => createProjectScroll(".work-heading h2", "top 20px"),
+        );
+        aboutMedia.add(
+          "(min-width: 901px) and (min-height: 651px) and (max-height: 730px)",
+          () =>
+            createProjectScroll(
+              ".work-heading .section-kicker",
+              "top 20px",
+            ),
+        );
+        aboutMedia.add(
+          "(min-width: 900px) and (min-height: 731px)",
+          () => createProjectScroll(".work", "top top"),
+        );
       }
     });
 
