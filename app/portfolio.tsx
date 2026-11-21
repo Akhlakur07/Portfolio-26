@@ -97,7 +97,20 @@ const technologyGroups = [
 
 const heroPhrases = ["curiosity.", "clarity.", "real people."];
 
-const projects = [
+interface Project {
+  number: string;
+  name: string;
+  type: string;
+  description: string;
+  image: string;
+  github?: string;
+  githubClient?: string;
+  githubServer?: string;
+  live?: string;
+  tags: string;
+}
+
+const projects: Project[] = [
   {
     number: "01",
     name: "Learnly",
@@ -116,20 +129,22 @@ const projects = [
     description:
       "A place for curious people to share knowledge and find their community.",
     image: "/images/stackvault.png",
-    github: "https://github.com/Akhlakur07/StackSphere-client-side",
+    githubClient: "https://github.com/Akhlakur07/StackSphere-client-side",
+    githubServer: "https://github.com/Akhlakur07/StackSphere-server-side",
     live: "http://stack-web-6def0.web.app/",
     tags: "React · Firebase · Community",
   },
   {
     number: "03",
-    name: "Taskforce",
-    type: "Freelance task platform",
+    name: "BRACU Research Connect",
+    type: "Thesis & research portal",
     description:
-      "Connecting people with meaningful work through a clear task workflow.",
-    image: "/images/taskforce.png",
-    github: "https://github.com/Akhlakur07/freelance-web-client",
-    live: "https://freelance-auth-96883.web.app/",
-    tags: "React · Firebase · Marketplace",
+      "A full-stack portal connecting BRACU CSE students and supervisors with live directories, thesis proposals, and arXiv research discovery.",
+    image: "/images/bracu_research_connect.png",
+    githubClient: "https://github.com/Akhlakur07/BRAC-Research-Connect",
+    githubServer: "https://github.com/Akhlakur07/BRACU-Research-server",
+    live: "https://brac-research-connect.vercel.app/",
+    tags: "React · Express · MongoDB · Firebase",
   },
   {
     number: "04",
@@ -303,10 +318,9 @@ function SmoothScroll() {
       aboutMedia.add(
         "(min-width: 901px) and (prefers-reduced-motion: no-preference)",
         () => {
-          const chapters =
-            document.querySelector<HTMLElement>(".about-chapters");
-          if (!chapters) return;
-          gsap.to(chapters, {
+          const cards = document.querySelector<HTMLElement>(".about-cards");
+          if (!cards) return;
+          gsap.to(cards, {
             yPercent: -75,
             ease: "none",
             scrollTrigger: {
@@ -707,7 +721,7 @@ export default function Portfolio() {
                   pattern="floyd"
                   pixelSize={2}
                   inkColor="#0B0B0B"
-                  paperColor="#eeffce"
+                  paperColor="#fffffff1"
                   revealRadius={200}
                   softness={0.6}
                   linger={1}
@@ -730,62 +744,103 @@ export default function Portfolio() {
                 CSE GRADUATE · BRAC UNIVERSITY
               </span>
             </div>
-            <div className="about-chapter-window">
-              <div className="about-chapters">
-                <article className="about-chapter">
-                  <span>01 / BACKGROUND</span>
-                  <p>
-                    I’m a Computer Science and Engineering graduate from{" "}
-                    <strong>BRAC University</strong> in Bangladesh. My
-                    background in computing shaped how I approach challenges:
-                    break a complex problem into smaller parts, look for the
-                    idea underneath, and work toward a solution that’s both
-                    thoughtful and useful.
-                  </p>
-                  <small>Based in Bangladesh · Open to opportunities</small>
-                </article>
+            <div className="about-card-window">
+              <div className="about-cards">
+                <div className="about-card-slide">
+                  <article className="about-card">
+                    <div className="about-card-top">
+                      <span>01 / BACKGROUND</span>
+                      <span className="about-card-step">
+                        01 / 04{" "}
+                        <span className="about-card-dot" aria-hidden="true" />
+                      </span>
+                    </div>
+                    <h3>Rooted in Computer Science</h3>
+                    <p>
+                      A Computer Science &amp; Engineering graduate from{" "}
+                      <strong>BRAC University</strong>. My foundation trained me
+                      to break down ambiguity, spot underlying structure, and
+                      engineer practical solutions.
+                    </p>
+                    <div className="about-card-foot">
+                      <small>Dhaka, Bangladesh · Open to roles</small>
+                    </div>
+                  </article>
+                </div>
 
-                <article className="about-chapter">
-                  <span>02 / WHAT I DO</span>
-                  <p>
-                    I turn questions, early ideas, and complex problems into{" "}
-                    <strong>useful digital products.</strong> I’m interested in
-                    the full journey—from understanding what needs to be solved
-                    to building an experience that feels clear, practical, and
-                    easy to use.
-                  </p>
-                  <small>From a rough idea to something people can use.</small>
-                </article>
+                <div className="about-card-slide">
+                  <article className="about-card">
+                    <div className="about-card-top">
+                      <span>02 / WHAT I BUILD</span>
+                      <span className="about-card-step">
+                        02 / 04{" "}
+                        <span className="about-card-dot" aria-hidden="true" />
+                      </span>
+                    </div>
+                    <h3>Ideas into usable products</h3>
+                    <p>
+                      I take early concepts and complex workflows and turn them
+                      into <strong>intuitive digital products</strong>—focusing
+                      on clarity, speed, and interfaces that feel effortless to
+                      use.
+                    </p>
+                    <div className="about-card-foot">
+                      <small>Full-stack · Product-minded</small>
+                    </div>
+                  </article>
+                </div>
 
-                <article className="about-chapter">
-                  <span>03 / HOW I WORK</span>
-                  <p>
-                    I start by understanding the problem and what a useful
-                    outcome looks like. Then I shape a clear direction, build it
-                    in deliberate steps, test what works, and refine the details
-                    until the solution feels cohesive.
-                  </p>
-                  <small>
-                    Curiosity first · Thoughtful execution throughout
-                  </small>
-                </article>
+                <div className="about-card-slide">
+                  <article className="about-card">
+                    <div className="about-card-top">
+                      <span>03 / HOW I WORK</span>
+                      <span className="about-card-step">
+                        03 / 04{" "}
+                        <span className="about-card-dot" aria-hidden="true" />
+                      </span>
+                    </div>
+                    <h3>Deliberate, step-by-step craft</h3>
+                    <p>
+                      I start by framing the real problem, map out a clean
+                      architecture, and ship in focused iterations—testing
+                      assumptions and refining every detail until it clicks.
+                    </p>
+                    <div className="about-card-foot">
+                      <small>Curiosity first · Clean execution</small>
+                    </div>
+                  </article>
+                </div>
 
-                <article className="about-chapter">
-                  <span>04 / OUTSIDE THE SCREEN</span>
-                  <p>
-                    I’m curious about the systems beneath digital products: how
-                    full-stack architecture connects the pieces, how data
-                    reveals useful patterns, and how machine learning can create new possibilities. I enjoy learning how these areas fit together.
-                  </p>
-                  <a
-                    className="text-link"
-                    href="https://drive.google.com/file/d/1mOmCYzFVl2bktuETnp9VxfDnGEBP-GzV/view"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    VIEW MY RESUME <span>↗</span>
-                  </a>
-                </article>
+                <div className="about-card-slide">
+                  <article className="about-card">
+                    <div className="about-card-top">
+                      <span>04 / INTERESTS</span>
+                      <span className="about-card-step">
+                        04 / 04{" "}
+                        <span className="about-card-dot" aria-hidden="true" />
+                      </span>
+                    </div>
+                    <h3>Systems, data &amp; applied AI</h3>
+                    <p>
+                      Beyond interfaces, I’m drawn to how{" "}
+                      <strong>
+                        full-stack systems, data, and machine learning
+                      </strong>{" "}
+                      intersect—exploring edge AI, research workflows, and
+                      intelligent tools.
+                    </p>
+                    <div className="about-card-foot">
+                      <a
+                        className="about-card-link"
+                        href="https://drive.google.com/file/d/1mOmCYzFVl2bktuETnp9VxfDnGEBP-GzV/view"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        VIEW MY RESUME <span aria-hidden="true">↗</span>
+                      </a>
+                    </div>
+                  </article>
+                </div>
               </div>
             </div>
           </div>
@@ -834,9 +889,29 @@ export default function Portfolio() {
                           LIVE SITE <span>↗</span>
                         </a>
                       )}
-                      <a href={project.github} target="_blank" rel="noreferrer">
-                        GITHUB <span>↗</span>
-                      </a>
+                      {project.github && (
+                        <a href={project.github} target="_blank" rel="noreferrer">
+                          GITHUB <span>↗</span>
+                        </a>
+                      )}
+                      {project.githubClient && (
+                        <a
+                          href={project.githubClient}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          GITHUB (CLIENT) <span>↗</span>
+                        </a>
+                      )}
+                      {project.githubServer && (
+                        <a
+                          href={project.githubServer}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          GITHUB (SERVER) <span>↗</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
