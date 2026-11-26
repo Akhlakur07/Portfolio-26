@@ -148,14 +148,15 @@ const projects: Project[] = [
   },
   {
     number: "04",
-    name: "Volunteer",
-    type: "Volunteer coordination",
+    name: "TeamNest",
+    type: "Multi-tenant SaaS platform",
     description:
-      "Helping people find a cause, get involved, and make time count.",
-    image: "/images/volunteer.png",
-    github: "https://github.com/Akhlakur07/volunteer-client-side",
-    live: "https://volunteer-auth-e1a75.web.app/",
-    tags: "React · Firebase · Social impact",
+      "A multi-tenant workspace platform with isolated organizations, role-based access control, tokenized team invites, and Stripe subscription billing.",
+    image: "/images/TeamNest.png",
+    githubClient: "https://github.com/Akhlakur07/TeamNest-Front",
+    githubServer: "https://github.com/Akhlakur07/TeamNest-Server",
+    live: "https://team-nest-server.vercel.app/",
+    tags: "React · Express · MongoDB · Stripe · Firebase",
   },
   {
     number: "05",
