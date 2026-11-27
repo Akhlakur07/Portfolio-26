@@ -155,7 +155,7 @@ const projects: Project[] = [
     image: "/images/TeamNest.png",
     githubClient: "https://github.com/Akhlakur07/TeamNest-Front",
     githubServer: "https://github.com/Akhlakur07/TeamNest-Server",
-    live: "https://team-nest-server.vercel.app/",
+    live: "https://team-nest-front.vercel.app/",
     tags: "React · Express · MongoDB · Stripe · Firebase",
   },
   {
